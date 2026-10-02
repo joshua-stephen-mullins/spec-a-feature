@@ -2442,6 +2442,110 @@ Details of a peer evaluation: The instructor may choose to see more details of o
 **Assumptions:**
 **Open Issues:**
 
+## **Notifications**
+
+### **UC-NOT-nudge-non-submitters: The instructor reminds the students who have not submitted for a week**
+
+**UC ID and Name:** UC-NOT-nudge-non-submitters: Remind the students who have not submitted for a week
+**Created By:** Joshua Mullins
+**Date Created:** 01/Oct/2026
+**Primary Actor:** instructor
+**Secondary Actors:** student (the recipient of a nudge), Gmail SMTP mail server
+**Trigger:** The instructor indicates to view the students of a course section who have not submitted for a week.
+**Description:** The instructor wants to see which students in her course section have not submitted their weekly activity report or peer evaluation for a week and send a nudge to only those students, so that the students who are behind are prompted while they can still act and the students who are done are not bothered.
+
+**Preconditions:**
+- PRE-1. The instructor is logged into the system.
+- PRE-2. The instructor is assigned to at least one course section, or is the course admin of a course that has one (BR-section-scoped-access).
+
+**Postconditions:**
+- POST-1. The submission status list for the selected course section and week has been displayed to the instructor.
+- POST-2. Each nudge the mail server accepted has been recorded against its student, record type, and week (BR-nudge-limit).
+
+**Main Success Scenario:**
+1. The instructor indicates to view the students of a course section who have not submitted for a week.
+2. The system asks the instructor to provide the parameters according to the "List parameters" defined in the Associated Information of this use case.
+3. The instructor selects a course section and a week and confirms that she has finished.
+4. The system validates the parameters according to the "List parameters" defined in the Associated Information of this use case.
+5. The system computes each student's submission status for the selected week (BR-submission-status) and displays the list according to the "Submission status list" defined in the Associated Information of this use case.
+6. The instructor selects one or more students listed as *not submitted* and, for each, the record type(s) to nudge her about, and indicates to send the nudges.
+7. The system displays the selected students and record types and asks the instructor to confirm.
+8. The instructor confirms the selection.
+9. The system recomputes the submission status of each selected student (BR-submission-status) and checks each selection against BR-nudge-limit, setting aside any selection that is no longer *not submitted* or has already been nudged.
+10. The system has the mail server send each remaining selected student one nudge email according to the "Nudge email" defined in the Associated Information of this use case.
+11. The system records each nudge the mail server accepted (BR-nudge-limit).
+12. The system informs the instructor which nudges were sent and which selections were set aside or failed, with the reason for each.
+13. Use case ends.
+
+**Extensions:**
+- **4a. Input validation rule violation:**
+  - 4a1. The system alerts the instructor that an input validation rule is violated and displays the nature and location of the error.
+  - 4a2. The instructor corrects the mistake and returns to step 3 of the normal flow.
+- **4b. The instructor may not access the selected course section:**
+  - 4b1. The system refuses the request, displays no submission status, and informs the instructor that she may view only the course sections she is assigned to or whose course she owns (BR-section-scoped-access, CO-ferpa).
+  - 4b2. Use case ends.
+- **5a. The selected week is not one of the course section's active weeks:**
+  - 5a1. The system shows every student's peer evaluation status as *not expected* and offers no peer evaluation nudges (BR-active-weeks, BR-submission-status). Weekly activity report status is computed as usual.
+  - 5a2. The use case continues at step 6 of the normal flow.
+- **5b. A student is not assigned to a team:**
+  - 5b1. The system lists the student in a separate *not on a team* group, not as a student who has *not submitted*, and does not allow a nudge to be selected for her (BR-team-assignment-required, BR-submission-status).
+  - 5b2. The use case continues at step 6 of the normal flow.
+- **5c. A student has been deactivated:**
+  - 5c1. The system does not list the student and does not allow a nudge to be sent to her (BR-student-lifecycle).
+  - 5c2. The use case continues at step 6 of the normal flow.
+- **5d. The peer evaluation submission window for the selected week has closed:**
+  - 5d1. The system shows each student who has *not submitted* her peer evaluation as *missed*, does not allow a peer evaluation nudge to be selected, and informs the instructor that a missed peer evaluation cannot be made up (BR-evaluation-submission-window). Weekly activity report nudges remain available, because a weekly activity report may still be submitted for a past week (UC-WAR-manage-activities).
+  - 5d2. The use case continues at step 6 of the normal flow.
+- **5e. A student has already been nudged for a record type for the selected week:**
+  - 5e1. The system shows when and by whom the earlier nudge was sent and does not allow another nudge of that record type to be selected for her (BR-nudge-limit).
+  - 5e2. The use case continues at step 6 of the normal flow.
+- **5f. A student submitted her weekly activity report for the selected week and then deleted every activity in it:**
+  - 5f1. The system lists her as *not submitted* (BR-submission-status), like any other such student; if she was already nudged for that week, 5e applies.
+  - 5f2. The use case continues at step 6 of the normal flow.
+- **5g. No student in the course section is *not submitted* for the selected week:**
+  - 5g1. The system informs the instructor that every student on a team has submitted.
+  - 5g2. Use case ends.
+- **6a. The instructor chooses not to send any nudge:**
+  - 6a1. Use case ends.
+- **8a. The instructor chooses to modify the selection:**
+  - 8a1. The instructor returns to step 6 of the normal flow.
+- **9a. A selected student submitted, or was nudged by another instructor, after the list was displayed:**
+  - 9a1. The system sets the selection aside and does not send it; step 12 reports it with the reason.
+  - 9a2. The use case continues at step 10 of the normal flow.
+- **10a. The mail server rejects the nudge for a student:**
+  - 10a1. The system logs the failure, does not record the nudge (so it does not count toward BR-nudge-limit), and continues with the remaining students.
+  - 10a2. Step 12 reports the failure; the instructor may select that student again later.
+  - 10a3. The use case continues at step 11 of the normal flow.
+
+**Priority:** Medium
+**Frequency of Use:** Approximately 2-3 users (the instructors of a course section), 1-2 usages per week during the active weeks.
+**Business Rules:** BR-section-scoped-access (an instructor views and nudges only the students of a course section she is assigned to, a course admin only those of a course she owns), BR-role-based-access (only an instructor or course admin performs this use case; a student never sees the submission status list, not even for her own team), BR-submission-status, BR-nudge-limit, BR-team-assignment-required, BR-active-weeks, BR-evaluation-submission-window, BR-student-lifecycle
+
+**Associated Information:**
+
+List parameters:
+
+| Property name | Data type | Validation rule |
+| ---- | ---- | ---- |
+| Course section | course section | Required. Only the course sections the instructor is assigned to, or whose course she owns as course admin, are offered (BR-section-scoped-access). |
+| Week | week | Required. Must be a week before the current week. By default, it shall be the previous week. |
+
+Submission status list:
+- One row per active student of the course section, grouped by team, with the *not on a team* group last; sorted by last name in ascending order within each group.
+- Columns: student name, team, weekly activity report status (*submitted* / *not submitted*), peer evaluation status (*submitted* / *not submitted* / *missed* / *not expected*), and the earlier nudge for each record type, if any (time sent and sending instructor).
+- Statuses are those defined by BR-submission-status; *missed* is a *not submitted* peer evaluation whose submission window has closed (BR-evaluation-submission-window).
+- The list shows submission status only, not the content of any weekly activity report or peer evaluation.
+
+Nudge email:
+- Addressed to one student only; no other student's address appears in any recipient field (CO-ferpa).
+- Subject: "ProjectPulse Submission Reminder".
+- Body: the student's first name, the course section name, the week, and each record type the nudge is about. For a peer evaluation, it also states that the submission window closes at the end of the current week and that a missed peer evaluation cannot be made up.
+- It does not name any other student or reveal any other student's submission status.
+
+**Related Use Cases:** UC-WAR-team-war-report (shows one team's weekly activity report non-submitters, without a nudge), UC-WAR-manage-activities, UC-EVA-submit-evaluation, UC-EVA-section-evaluation-report. The scheduled weekly reminder (FR-NOT-weekly-reminder) is not part of this use case; it should skip the students who have *submitted* using the same BR-submission-status.
+**Assumptions:**
+**Open Issues:**
+
 ## **Templates and Provisioning**
 
 ### **UC-TPL-provision-documents: The course admin creates team documents from built-in templates**
