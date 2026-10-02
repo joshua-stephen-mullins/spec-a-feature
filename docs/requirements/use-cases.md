@@ -2485,7 +2485,7 @@ Details of a peer evaluation: The instructor may choose to see more details of o
   - 4b1. The system refuses the request, displays no submission status, and informs the instructor that she may view only the course sections she is assigned to or whose course she owns (BR-section-scoped-access, CO-ferpa).
   - 4b2. Use case ends.
 - **5a. The selected week is not one of the course section's active weeks:**
-  - 5a1. The system shows every student's peer evaluation status as *not expected* and offers no peer evaluation nudges (BR-active-weeks, BR-submission-status). Weekly activity report status is computed as usual.
+  - 5a1. The system shows every student's weekly activity report and peer evaluation status as *not expected* and offers no nudges (BR-active-weeks, BR-submission-status).
   - 5a2. The use case continues at step 6 of the normal flow.
 - **5b. A student is not assigned to a team:**
   - 5b1. The system lists the student in a separate *not on a team* group, not as a student who has *not submitted*, and does not allow a nudge to be selected for her (BR-team-assignment-required, BR-submission-status).
