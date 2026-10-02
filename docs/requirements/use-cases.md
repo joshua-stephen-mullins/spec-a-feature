@@ -2471,8 +2471,8 @@ Details of a peer evaluation: The instructor may choose to see more details of o
 6. The instructor selects one or more students listed as *not submitted* and, for each, the record type(s) to nudge her about, and indicates to send the nudges.
 7. The system displays the selected students and record types and asks the instructor to confirm.
 8. The instructor confirms the selection.
-9. The system recomputes the submission status of each selected student (BR-submission-status) and checks each selection against BR-nudge-limit, setting aside any selection that is no longer *not submitted* or has already been nudged.
-10. The system has the mail server send each remaining selected student one nudge email according to the "Nudge email" defined in the Associated Information of this use case.
+9. The system re-checks every selection against the same conditions it applied in step 5 (BR-section-scoped-access, BR-submission-status, BR-nudge-limit, and the peer evaluation submission window), as they stand now, and sets aside any selection that no longer passes them.
+10. The system has the mail server send each remaining selected student one nudge email, naming every record type still selected for her, according to the "Nudge email" defined in the Associated Information of this use case.
 11. The system records each nudge the mail server accepted (BR-nudge-limit).
 12. The system informs the instructor which nudges were sent and which selections were set aside or failed, with the reason for each.
 13. Use case ends.
@@ -2509,7 +2509,7 @@ Details of a peer evaluation: The instructor may choose to see more details of o
   - 6a1. Use case ends.
 - **8a. The instructor chooses to modify the selection:**
   - 8a1. The instructor returns to step 6 of the normal flow.
-- **9a. A selected student submitted, or was nudged by another instructor, after the list was displayed:**
+- **9a. A selection no longer passes the step 5 conditions** (e.g., the student submitted, another instructor nudged her, or the week rolled over and closed the peer evaluation submission window after the list was displayed):
   - 9a1. The system sets the selection aside and does not send it; step 12 reports it with the reason.
   - 9a2. The use case continues at step 10 of the normal flow.
 - **10a. The mail server rejects the nudge for a student:**
