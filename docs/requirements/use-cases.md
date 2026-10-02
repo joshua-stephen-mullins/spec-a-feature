@@ -2493,7 +2493,7 @@ Details of a peer evaluation: The instructor may choose to see more details of o
 - **5c. A student has been deactivated:**
   - 5c1. The system does not list the student and does not allow a nudge to be sent to her (BR-student-lifecycle).
   - 5c2. The use case continues at step 6 of the normal flow.
-- **5d. The peer evaluation submission window for the selected week has closed:**
+- **5d. The selected week is an active week whose peer evaluation submission window has closed:**
   - 5d1. The system shows each student who has *not submitted* her peer evaluation as *missed*, does not allow a peer evaluation nudge to be selected, and informs the instructor that a missed peer evaluation cannot be made up (BR-evaluation-submission-window). Weekly activity report nudges remain available, because a weekly activity report may still be submitted for a past week (UC-WAR-manage-activities).
   - 5d2. The use case continues at step 6 of the normal flow.
 - **5e. A student has already been nudged for a record type for the selected week:**
@@ -2502,8 +2502,8 @@ Details of a peer evaluation: The instructor may choose to see more details of o
 - **5f. A student submitted her weekly activity report for the selected week and then deleted every activity in it:**
   - 5f1. The system lists her as *not submitted* (BR-submission-status), like any other such student; if she was already nudged for that week, 5e applies.
   - 5f2. The use case continues at step 6 of the normal flow.
-- **5g. No student in the course section is *not submitted* for the selected week:**
-  - 5g1. The system informs the instructor that every student on a team has submitted.
+- **5g. No nudge can be selected for any student in the course section:**
+  - 5g1. The system displays the list and informs the instructor that no nudge is available for the selected week. It does not state that every student has submitted, because some may have *missed* a peer evaluation or be *not on a team*.
   - 5g2. Use case ends.
 - **6a. The instructor chooses not to send any nudge:**
   - 6a1. Use case ends.
